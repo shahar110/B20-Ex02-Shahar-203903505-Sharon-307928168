@@ -9,6 +9,7 @@ namespace ConsoleUI
     {
         //% this is a test comment
         private BoardSquare[,] m_PlayingBoard = null;
+        int a;
         public Game(int i_BoardGridRows, int i_BoardGridCols)
         {
             m_PlayingBoard = generatePlayingBoard(i_BoardGridRows, i_BoardGridCols);
