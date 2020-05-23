@@ -7,6 +7,7 @@ namespace ConsoleUI
 {
     class Game
     {
+        //% this is a test comment
         private BoardSquare[,] m_PlayingBoard = null;
         public Game(int i_BoardGridRows, int i_BoardGridCols)
         {
