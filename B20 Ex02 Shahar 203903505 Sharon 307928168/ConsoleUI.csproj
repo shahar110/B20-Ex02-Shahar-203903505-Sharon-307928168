@@ -31,7 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Board.cs" />
     <Compile Include="BoardSquare.cs" />
+    <Compile Include="ConsoleUi.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameHandler.cs" />
     <Compile Include="Player.cs" />

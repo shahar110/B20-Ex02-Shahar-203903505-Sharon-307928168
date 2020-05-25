@@ -9,14 +9,10 @@ namespace ConsoleUI
     {
         private readonly char m_Value;
         //private readonly Point m_Cordinates;
-        private readonly char m_Col;
-        private readonly int m_Row;
         private bool m_IsRevealed = false;
 
-        public BoardSquare(char i_SquareColumn, int i_SquareRow, char i_SquareValue)
+        public BoardSquare(char i_SquareValue)
         {
-            m_Col = i_SquareColumn;
-            m_Row = i_SquareRow;
             m_Value = i_SquareValue;
         }
 
@@ -33,6 +29,8 @@ namespace ConsoleUI
         public bool IsReaveled
         {
             get { return m_IsRevealed; }
+
+            set { m_IsRevealed = value; }
         }
 
     }
