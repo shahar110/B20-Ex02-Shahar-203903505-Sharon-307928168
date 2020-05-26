@@ -8,13 +8,23 @@ namespace ConsoleUI
     class Player
     {
         private readonly string m_Name;
-        private int m_CurrentScore = 0;
+        private int m_Score = 0;
         private Point m_FirstRevealedSquare;
         private Point m_SecondRevealedSquare;
 
         public Player(string i_PlayerName)
         {
             m_Name = i_PlayerName;
+        }
+
+        public string Name
+        {
+            get { return m_Name; }
+        }
+
+        public int Score
+        {
+            get { return m_Score; }
         }
 
         public Point FirstRevealedSquare

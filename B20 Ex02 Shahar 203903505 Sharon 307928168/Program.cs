@@ -29,14 +29,13 @@ namespace ConsoleUI
 
             
             //test board print with reaveled squares
-            Board playingBoard = new Board(6, 6);
+            Board playingBoard = new Board(4, 6);
             playingBoard.RevealBoardSquare(0, 0);
             playingBoard.RevealBoardSquare(1, 1);
             playingBoard.RevealBoardSquare(2, 2);
             playingBoard.RevealBoardSquare(3, 3);
-            playingBoard.RevealBoardSquare(4, 4);
             
-            ConsoleUi ui = new ConsoleUi();
+            ConsoleUI ui = new ConsoleUI();
             ui.DrawBoard(playingBoard);
 
             Console.ReadLine();
