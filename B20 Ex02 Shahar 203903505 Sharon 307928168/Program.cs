@@ -16,17 +16,33 @@ namespace ConsoleUI
             StringBuilder board = GameHandler.GenerateConsoleBoard(4,6);
             Console.WriteLine(board);
             Console.WriteLine("-------------------------------------------");
-            char[,] test = Game.generateLettersGrid(6, 6);
-            Game game = new Game(rows, columns);
+            //char[,] test = Board.generateLettersGrid(6, 6);
+            //Board pBoard = new Board(rows, columns);
 
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    Console.Write(String.Format("{0,-5}", game.Board[i, j].Value));
-                }
-                Console.WriteLine();
-            }
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < columns; j++)
+            //    {
+            //        Console.Write(String.Format("{0,-5}", pBoard.Matrix[i, j].Value));
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine("\n-------------------------------------------\n");
+
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < columns; j++)
+            //    {
+            //        Console.Write(String.Format("{0,-10}", pBoard.Matrix[i, j].IsRevealed));
+            //    }
+            //    Console.WriteLine();
+            //}
+            Player player1 = new Player("Shahar");
+            Player player2 = new Player("Sharon");
+            Game game = new Game(4, 4, player1, player2);
+            eGameStatus gameStatus = eGameStatus.InProgress;
+            //game.SingleMatch(player1, player2, out gameStatus);
+            game.PlayerVsPcMatch(player1, player2, out gameStatus);
         }
     }
 }
