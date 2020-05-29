@@ -35,7 +35,7 @@
     <Compile Include="RememberedItem.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameHandler.cs" />
+    <Compile Include="GameHandlerUI.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />

@@ -13,7 +13,7 @@ namespace ConsoleUI
         {
             
             //GameHandler game = new GameHandler();
-            StringBuilder board = GameHandler.GenerateConsoleBoard(4,6);
+            StringBuilder board = GameHandlerUI.GenerateConsoleBoard(4,6);
             Console.WriteLine(board);
             Console.WriteLine("-------------------------------------------");
             //char[,] test = Board.generateLettersGrid(6, 6);
@@ -37,12 +37,13 @@ namespace ConsoleUI
             //    }
             //    Console.WriteLine();
             //}
-            Player player1 = new Player("Shahar");
-            Player player2 = new Player("Sharon");
-            Game game = new Game(4, 4, player1, player2);
-            eGameStatus gameStatus = eGameStatus.InProgress;
+            //Player player1 = new Player("Shahar");
+            //Player player2 = new Player("Sharon");
+            //Game game = new Game(4, 4, player1, player2);
+            //eGameStatus gameStatus = eGameStatus.InProgress;
             //game.SingleMatch(player1, player2, out gameStatus);
-            game.PlayerVsPcMatch(player1, player2, out gameStatus);
+            //game.PlayerVsPcMatch(player1, player2, out gameStatus);
+            GameHandlerUI.PlayerUiMatch();
         }
     }
 }
