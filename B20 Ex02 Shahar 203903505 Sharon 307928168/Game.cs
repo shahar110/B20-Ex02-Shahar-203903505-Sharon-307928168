@@ -7,6 +7,31 @@ namespace ConsoleUI
 {
     public class Game
     {
+        public enum eTileSelectionStatus
+        {
+            AwaitingSelection,
+            IllegalSquareSelection,
+            SquareAlreadyRevealed,
+            PlayerRevealedFirstSquare,
+            PlayerRevealedSecondSquare,
+            SquaresMatch,
+            SquaresDontMatch,
+        }
+
+        public enum eGameStatus
+        {
+            InProgress,
+            GameFinished,
+            FirstPlayerWon,
+            SecondPlayerWon,
+        }
+
+        public enum ePlayingMode
+        {
+            PlayerVsPlayer,
+            PlayerVsPc,
+        }
+
         private readonly Board m_PlayingBoard = null;
         private Player m_FirstPlayer = null;
         private Player m_SecondPlayer = null;
@@ -47,11 +72,11 @@ namespace ConsoleUI
         //    }
         //}
 
-        public void PlayerMove(Point i_SelectedSquare, ePlayingMode i_PlayingMode, out eSquareSelectionStatus o_SquareSelectionStatus, out eGameStatus o_GameStatus)
+        public void PlayerMove(Point i_SelectedSquare, ePlayingMode i_PlayingMode, out eTileSelectionStatus o_SquareSelectionStatus, out eGameStatus o_GameStatus)
         {
             playerSquareSelection(i_SelectedSquare, out o_SquareSelectionStatus);
 
-            if (o_SquareSelectionStatus == eSquareSelectionStatus.PlayerRevealedSecondSquare)
+            if (o_SquareSelectionStatus == eTileSelectionStatus.PlayerRevealedSecondSquare)
             {
                 evalueatePlayerMove(i_PlayingMode, out o_SquareSelectionStatus);
                 swapTurns();
@@ -83,7 +108,7 @@ namespace ConsoleUI
             }
         }
 
-        private void evalueatePlayerMove(ePlayingMode i_PlayingMode, out eSquareSelectionStatus o_SquareSelectionStatus)
+        private void evalueatePlayerMove(ePlayingMode i_PlayingMode, out eTileSelectionStatus o_SquareSelectionStatus)
         {
             if (m_PlayingBoard.GetSquareValue(m_CurrentPlayer.FirstRevealedSquare) == m_PlayingBoard.GetSquareValue(m_CurrentPlayer.SecondRevealedSquare))
             {
@@ -96,7 +121,7 @@ namespace ConsoleUI
                     m_PcAvailableSquaresList.Remove(secondSquareListValue);
                 }
                 m_CurrentPlayer.ResetSquareSelection();
-                o_SquareSelectionStatus = eSquareSelectionStatus.SquaresMatch;
+                o_SquareSelectionStatus = eTileSelectionStatus.SquaresMatch;
                 PrintValueBoard();
                 PrintRevealedBoard();
 
@@ -106,21 +131,21 @@ namespace ConsoleUI
                 m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.FirstRevealedSquare);
                 m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.SecondRevealedSquare);
                 m_CurrentPlayer.ResetSquareSelection();
-                o_SquareSelectionStatus = eSquareSelectionStatus.SquaresDontMatch;
+                o_SquareSelectionStatus = eTileSelectionStatus.SquaresDontMatch;
                 PrintValueBoard();
                 PrintRevealedBoard();
             }
         }
 
-        private void playerSquareSelection(Point i_SelectedSquare, out eSquareSelectionStatus o_SquareSelectionStatus)
+        private void playerSquareSelection(Point i_SelectedSquare, out eTileSelectionStatus o_SquareSelectionStatus)
         {
             if (!m_PlayingBoard.CheckIfSquareWithinRange(i_SelectedSquare))
             {
-                o_SquareSelectionStatus = eSquareSelectionStatus.IllegalSquareSelection;
+                o_SquareSelectionStatus = eTileSelectionStatus.IllegalSquareSelection;
             }
             else if (m_PlayingBoard.IsSquareRevealed(i_SelectedSquare))
             {
-                o_SquareSelectionStatus = eSquareSelectionStatus.SquareAlreadyRevealed;
+                o_SquareSelectionStatus = eTileSelectionStatus.SquareAlreadyRevealed;
             }
             else
             {
@@ -128,12 +153,12 @@ namespace ConsoleUI
                 if (m_CurrentPlayer.FirstRevealedSquare == null)
                 {
                     m_CurrentPlayer.FirstRevealedSquare = i_SelectedSquare;
-                    o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedFirstSquare;
+                    o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedFirstSquare;
                 }
                 else
                 {
                     m_CurrentPlayer.SecondRevealedSquare = i_SelectedSquare;
-                    o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedSecondSquare;
+                    o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedSecondSquare;
                 }
             }
         }
@@ -356,30 +381,5 @@ namespace ConsoleUI
             }
         }
 
-    }
-
-    public enum eSquareSelectionStatus
-    {
-        AwaitingSelection,
-        IllegalSquareSelection,
-        SquareAlreadyRevealed,
-        PlayerRevealedFirstSquare,
-        PlayerRevealedSecondSquare,
-        SquaresMatch,
-        SquaresDontMatch,
-    }
-
-    public enum eGameStatus
-    {
-        InProgress,
-        GameFinished,
-        FirstPlayerWon,
-        SecondPlayerWon,
-    }
-
-    public enum ePlayingMode
-    {
-        PlayerVsPlayer,
-        PlayerVsPc,
-    }
+    }    
 }

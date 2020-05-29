@@ -152,6 +152,26 @@ namespace ConsoleUI
             return isValidChoice;
         }
 
+        public void PrintAnotherRoundMessage()
+        {
+            Console.WriteLine("Would you like another round?");
+        }
+
+        public void PrintTileOutOfRange()
+        {
+            Console.WriteLine("The tile you chose is out of board range. Please try again: ");
+        }
+
+        public void PrintTileAlreadyRevealed()
+        {
+            Console.WriteLine("The tile you chose has already been revealed. Please try again: ");
+        }
+
+        public void PrintGoodByeMessage()
+        {
+            Console.WriteLine("Thank you for playing, Goodbye! (:");
+        }
+
         public void PrintEndGameSummery(Game i_Game)
         {
             string summeryMessage = string.Format(

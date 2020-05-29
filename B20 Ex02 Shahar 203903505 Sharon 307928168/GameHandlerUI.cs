@@ -12,31 +12,32 @@ namespace ConsoleUI
             Console.WriteLine();
         }
 
-        private static void notifyMoveResult(eSquareSelectionStatus squareSelectionStatus, Point i_SelectedSquare)
+        private static void notifyMoveResult(Game.eTileSelectionStatus squareSelectionStatus, Point i_SelectedSquare)
         {
             switch (squareSelectionStatus)
             {
-                case eSquareSelectionStatus.IllegalSquareSelection:
-                    Console.WriteLine(string.Format("Invalid square {0} selection!", i_SelectedSquare.GetFormated()));
+                case Game.eTileSelectionStatus.IllegalSquareSelection:
+                    //Console.WriteLine(string.Format("Invalid square {0} selection!", i_SelectedSquare.GetFormated()));
+
                     break;
 
-                case eSquareSelectionStatus.SquareAlreadyRevealed:
+                case Game.eTileSelectionStatus.SquareAlreadyRevealed:
                     Console.WriteLine(string.Format("Square {0} is already revealed!", i_SelectedSquare.GetFormated()));
                     break;
 
-                case eSquareSelectionStatus.PlayerRevealedFirstSquare:
+                case Game.eTileSelectionStatus.PlayerRevealedFirstSquare:
                     Console.WriteLine(string.Format("Square {0} is now revealed!", i_SelectedSquare.GetFormated()));
                     break;
 
-                case eSquareSelectionStatus.PlayerRevealedSecondSquare:
+                case Game.eTileSelectionStatus.PlayerRevealedSecondSquare:
                     Console.WriteLine(string.Format("Square {0} of value is now revealed!", i_SelectedSquare.GetFormated()));
                     break;
 
-                case eSquareSelectionStatus.SquaresMatch:
+                case Game.eTileSelectionStatus.SquaresMatch:
                     Console.WriteLine(string.Format("Squares MATCH!!!"));
                     break;
 
-                case eSquareSelectionStatus.SquaresDontMatch:
+                case Game.eTileSelectionStatus.SquaresDontMatch:
                     Console.WriteLine(string.Format("Squares DOESN'T match!"));
                     break;
 
