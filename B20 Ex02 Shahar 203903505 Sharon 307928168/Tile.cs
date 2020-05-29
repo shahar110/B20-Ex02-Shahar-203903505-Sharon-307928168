@@ -5,13 +5,13 @@ using System.Text;
 
 namespace ConsoleUI
 {
-    class BoardSquare
+    class Tile
     {
-        private readonly char m_Value;
+        private readonly char m_Value;   //%-change value to number.
         //private readonly Point m_Cordinates;
         private bool m_IsRevealed = false;
 
-        public BoardSquare(char i_SquareValue)
+        public Tile(char i_SquareValue)
         {
             m_Value = i_SquareValue;
         }

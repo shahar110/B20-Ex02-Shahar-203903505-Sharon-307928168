@@ -27,9 +27,9 @@ namespace ConsoleUI
                 Console.Write(String.Format("{0} |", i+1));
                 for (int j = 0; j < i_PlayingBoard.NumOfCols; j++)
                 {
-                    if (i_PlayingBoard.PlayingBoard[i,j].IsReaveled)
+                    if (i_PlayingBoard.BoardMatrix[i,j].IsReaveled)
                     {
-                        Console.Write(String.Format(" {0} ", i_PlayingBoard.PlayingBoard[i, j].Value));
+                        Console.Write(String.Format(" {0} ", i_PlayingBoard.BoardMatrix[i, j].Value));
                     }
                     else
                     {
@@ -44,7 +44,7 @@ namespace ConsoleUI
         }
            
         //%- change the the code repetition
-        public void GetBoardSize(out int o_NumOfCols, out int o_NumOfRows)
+        public void GetBoardDimentions(out int o_NumOfCols, out int o_NumOfRows)
         {
             Console.WriteLine("Please enter requested board size (available sizes are 4X4, 4X6, 6X4 or 6X6).");
 
@@ -74,6 +74,7 @@ namespace ConsoleUI
                 
         public Point GetUserChoice()
         {
+            Console.Write("Please choose a tile: ");
             string userChoice = Console.ReadLine();
 
             while(!isValidChoice(userChoice))
@@ -94,19 +95,19 @@ namespace ConsoleUI
             return i_ColumnLetter - 'A';
         }
 
-        public GameHandler.ePlayerType GetSecondPlayerType()
+        public void GetSecondPlayerType(out GameHandlerUI.ePlayerType o_secondPlayerType)
         {
-            GameHandler.ePlayerType secondPlayerTypeChoice = GameHandler.ePlayerType.IsHuman;
+            GameHandlerUI.ePlayerType secondPlayerTypeChoice = GameHandlerUI.ePlayerType.IsHuman;
             Console.WriteLine("Press 'y' to play against human player, or " +
                               "press any other key to play againt the computer");
             string userInput = Console.ReadLine();
 
             if (!userInput.Equals("y"))
             {
-                secondPlayerTypeChoice = GameHandler.ePlayerType.IsPC;
+                secondPlayerTypeChoice = GameHandlerUI.ePlayerType.IsPC;
             }
 
-            return secondPlayerTypeChoice;
+            o_secondPlayerType = secondPlayerTypeChoice;
         }
 
         private int convertRow(char i_Row)
@@ -143,16 +144,17 @@ namespace ConsoleUI
 
         public string GetUserName()
         {
+            Console.WriteLine("Please enter player name: ");
             string userName = Console.ReadLine();
             return userName;
         }
 
-        public void PrintWelcomeMessage()
+        public static void PrintWelcomeMessage()
         {
             Console.WriteLine("Hello! Welcome to Memory-Game");
         }
 
-        public void PrintEndGameSummery(Game i_Game)
+        public static void PrintEndGameSummery(Game i_Game)
         {
             string summeryMessage = string.Format(
 @"Game finished!
@@ -161,19 +163,29 @@ The Winner is: {0}
 {3}'s score: {4}",
                 i_Game.Winner.Name,
                 i_Game.FirstPlayer.Name,
-                i_Game.FirstPlayer.Score,
+                i_Game.FirstPlayerScore,
                 i_Game.SecondPlayer.Name,
-                i_Game.SecondPlayer.Score);
+                i_Game.SecondPlayerScore);
 
             Console.WriteLine(summeryMessage);
         }
 
-        public void PrintAnotherRoundMessage()
+        public static void PrintAnotherRoundMessage()
         {
             Console.WriteLine("Would you like another round?");
         }
 
-        public void PrintGoodByeMessage()
+        public void printTileOutOfRange()
+        {
+            Console.WriteLine("The tile you chose is out of board range. Please try again: ");
+        }
+
+        public void printTileAlreadyRevealed()
+        {
+            Console.WriteLine("The tile you chose has already been revealed. Please try again: ");
+        }
+
+        public static void PrintGoodByeMessage()
         {
             Console.WriteLine("Thank you for playing, Goodbye! (:");
         }

@@ -7,9 +7,12 @@ namespace ConsoleUI
 {
     class Board
     {
-        private BoardSquare[,] m_PlayingBoard = null;
-        int m_NumOfRows;
-        int m_NumOfCols;
+        private Tile[,] m_BoardMatrix = null;
+        private int m_NumOfRows;
+        private int m_NumOfCols;
+        private Tile m_firstRevealedTile;
+        private Tile m_secondRevealedTile;
+        private int m_RevealedTilesCount = 0;
    
         public Board(int i_NumOfRows, int i_NumOfCols)
         {
@@ -18,9 +21,9 @@ namespace ConsoleUI
             generatePlayingBoard();
         }
 
-        public BoardSquare[,] PlayingBoard
+        public Tile[,] BoardMatrix
         {
-            get { return m_PlayingBoard; }
+            get { return m_BoardMatrix; }
         }
 
         public int NumOfRows
@@ -33,16 +36,34 @@ namespace ConsoleUI
             get { return m_NumOfCols; }
         }
 
-        //%-change to private
-        public void RevealBoardSquare(int i_row, int i_col)
+        public Tile FirstRevealedTile
         {
-            m_PlayingBoard[i_row, i_col].IsReaveled = true;
+            get { return m_firstRevealedTile; }
+            set { m_firstRevealedTile = value; }
+        }
+
+        public Tile SecondRevealedTile
+        {
+            get { return m_secondRevealedTile; }
+            set { m_secondRevealedTile = value; }
+
+        }
+
+        public int RevealedTilesCount
+        {
+            get { return m_RevealedTilesCount; }
+            set { m_RevealedTilesCount = value; }
+        }
+        //%-change to private
+        public void RevealTile(int i_row, int i_col)
+        {
+            m_BoardMatrix[i_row, i_col].IsReaveled = true;
         }
 
         private void generatePlayingBoard()
         {
             char[,] dummyBoard = generateLettersGrid(m_NumOfRows, m_NumOfCols);
-            m_PlayingBoard = new BoardSquare[m_NumOfRows, m_NumOfCols];
+            m_BoardMatrix = new Tile[m_NumOfRows, m_NumOfCols];
 
             for (int i = 0; i < m_NumOfRows; i++)
             {
@@ -50,7 +71,7 @@ namespace ConsoleUI
                 {
                     // %TBD - change the name of Point class
                    // char currentGridColumn = (char)('A' + j);
-                    m_PlayingBoard[i, j] = new BoardSquare(dummyBoard[i, j]);
+                    m_BoardMatrix[i, j] = new Tile(dummyBoard[i, j]);
                 }
             }
         }

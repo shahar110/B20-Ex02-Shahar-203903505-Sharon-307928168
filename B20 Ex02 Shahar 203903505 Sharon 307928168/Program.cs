@@ -16,7 +16,7 @@ namespace ConsoleUI
             //Console.WriteLine("-------------------------------------------");
             //char[,] test = Game.generateLettersGrid(6, 6);
             //Game game = new Game(rows, columns);
-            
+
             //for (int i = 0; i < rows; i++)
             //{
             //    for (int j = 0; j < columns; j++)
@@ -27,16 +27,18 @@ namespace ConsoleUI
             //}
             //Console.ReadLine();
 
-            
-            //test board print with reaveled squares
-            Board playingBoard = new Board(4, 6);
-            playingBoard.RevealBoardSquare(0, 0);
-            playingBoard.RevealBoardSquare(1, 1);
-            playingBoard.RevealBoardSquare(2, 2);
-            playingBoard.RevealBoardSquare(3, 3);
-            
-            ConsoleUI ui = new ConsoleUI();
-            ui.DrawBoard(playingBoard);
+
+            ////test board print with reaveled squares
+            //Board playingBoard = new Board(4, 6);
+            //playingBoard.RevealBoardSquare(0, 0);
+            //playingBoard.RevealBoardSquare(1, 1);
+            //playingBoard.RevealBoardSquare(2, 2);
+            //playingBoard.RevealBoardSquare(3, 3);
+
+            //ConsoleUI ui = new ConsoleUI();
+            //DrawBoard(playingBoard);
+
+            GameHandlerUI.StartGame();
 
             Console.ReadLine();
         }
