@@ -23,6 +23,16 @@ namespace ConsoleUI
             Board.FillGridList(m_PcAvailableSquaresList, i_BoardNumOfRows * i_BoardNumOfCols);
         }
 
+        public Player CurrentPlayer
+        {
+            get { return m_CurrentPlayer; }
+        }
+
+        public Board PlayingBoard
+        {
+            get { return m_PlayingBoard; }
+        }
+
         //public void SingleMatch(Player i_FirstPlayer, Player i_SecondPlayer, out eGameStatus o_GameStatus)
         //{
         //    PrintValueBoard();
@@ -49,8 +59,15 @@ namespace ConsoleUI
 
         public void PlayerMove(Point i_SelectedSquare, ePlayingMode i_PlayingMode, out eSquareSelectionStatus o_SquareSelectionStatus, out eGameStatus o_GameStatus)
         {
-            playerSquareSelection(i_SelectedSquare, out o_SquareSelectionStatus);
-
+            if (i_PlayingMode == ePlayingMode.PlayerVsPc && m_CurrentPlayer.IsPc == true)
+            {
+                pcSquareSelection(out o_SquareSelectionStatus);
+            }
+            else
+            {
+                playerSquareSelection(i_SelectedSquare, out o_SquareSelectionStatus);
+            }
+            
             if (o_SquareSelectionStatus == eSquareSelectionStatus.PlayerRevealedSecondSquare)
             {
                 evalueatePlayerMove(i_PlayingMode, out o_SquareSelectionStatus);
@@ -85,13 +102,14 @@ namespace ConsoleUI
 
         private void evalueatePlayerMove(ePlayingMode i_PlayingMode, out eSquareSelectionStatus o_SquareSelectionStatus)
         {
+            int firstSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.FirstRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+            int secondSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.SecondRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+
             if (m_PlayingBoard.GetSquareValue(m_CurrentPlayer.FirstRevealedSquare) == m_PlayingBoard.GetSquareValue(m_CurrentPlayer.SecondRevealedSquare))
             {
                 m_CurrentPlayer.Score++;
-                if (i_PlayingMode == ePlayingMode.PlayerVsPc)
+                if (i_PlayingMode == ePlayingMode.PlayerVsPc && m_CurrentPlayer.IsPc == false)
                 {
-                    int firstSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.FirstRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
-                    int secondSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.SecondRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
                     m_PcAvailableSquaresList.Remove(firstSquareListValue);
                     m_PcAvailableSquaresList.Remove(secondSquareListValue);
                 }
@@ -103,6 +121,11 @@ namespace ConsoleUI
             }
             else
             {
+                if (i_PlayingMode == ePlayingMode.PlayerVsPc && m_CurrentPlayer.IsPc == true)
+                {
+                    m_PcAvailableSquaresList.Add(firstSquareListValue);
+                    m_PcAvailableSquaresList.Add(secondSquareListValue);
+                }
                 m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.FirstRevealedSquare);
                 m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.SecondRevealedSquare);
                 m_CurrentPlayer.ResetSquareSelection();
@@ -138,127 +161,34 @@ namespace ConsoleUI
             }
         }
 
-        //public void PlayerTurn(Player i_CurrentPlayer, ePlayingMode i_PlayingMode, out eGameStatus o_GameStatus)
-        //{
-        //    eSquareSelectionStatus playerSquareSlectionStatus = eSquareSelectionStatus.AwaitingSelection;
-        //    while (playerSquareSlectionStatus != eSquareSelectionStatus.PlayerRevealedSecondSquare)
-        //    {
-        //        Point playerSelectedSquare = new Point();
-        //        string userInput;
-        //        int parsedUserInput;
-        //        string revealedSquareNum;
+        private int pcSquareSelection(out eSquareSelectionStatus o_SquareSelectionStatus)
+        {
+            Random rand = new Random();
 
-        //        if (i_CurrentPlayer.FirstRevealedSquare == null)
-        //        {
-        //            revealedSquareNum = "FIRST";
-        //        }
-        //        else
-        //        {
-        //            revealedSquareNum = "SECOND";
-        //        };
-
-        //        Console.WriteLine(string.Format("Please enter {0} square row:", revealedSquareNum));
-        //        userInput = Console.ReadLine();
-        //        if (int.TryParse(userInput, out parsedUserInput))
-        //        {
-        //            playerSelectedSquare.X = parsedUserInput - 1;
-        //        }
-        //        Console.WriteLine(string.Format("Please enter {0} square row:", revealedSquareNum));
-        //        userInput = Console.ReadLine();
-        //        if (int.TryParse(userInput, out parsedUserInput))
-        //        {
-        //            playerSelectedSquare.Y = parsedUserInput - 1;
-        //        }
-
-        //        PlayerSquareSelection(i_CurrentPlayer, playerSelectedSquare, out playerSquareSlectionStatus);
-        //    }
-
-        //    if (m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare) == m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare))
-        //    {
-        //        Console.WriteLine(string.Format("Square {0} of value {1} and Square {2} of value {3} MATCH!!!"
-        //            , i_CurrentPlayer.FirstRevealedSquare.GetFormated()
-        //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare)
-        //            , i_CurrentPlayer.SecondRevealedSquare.GetFormated()
-        //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare)));
-        //        i_CurrentPlayer.Score++;
-        //        if (i_PlayingMode == ePlayingMode.PlayerVsPc)
-        //        {
-        //            int firstSquareListValue = Board.CalculateListIndex(i_CurrentPlayer.FirstRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
-        //            int secondSquareListValue = Board.CalculateListIndex(i_CurrentPlayer.SecondRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
-        //            m_PcAvailableSquaresList.Remove(firstSquareListValue);
-        //            m_PcAvailableSquaresList.Remove(secondSquareListValue);
-        //        }
-        //        i_CurrentPlayer.ResetSquareSelection();
-        //        PrintValueBoard();
-        //        PrintRevealedBoard();
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine(string.Format("Square {0} of value {1} and Square {2} of value {3} DOESN'T match!"
-        //            ,i_CurrentPlayer.FirstRevealedSquare.GetFormated()
-        //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare)
-        //            , i_CurrentPlayer.SecondRevealedSquare.GetFormated()
-        //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare)));
-        //        m_PlayingBoard.UnRevealSquare(i_CurrentPlayer.FirstRevealedSquare);
-        //        m_PlayingBoard.UnRevealSquare(i_CurrentPlayer.SecondRevealedSquare);
-        //        i_CurrentPlayer.ResetSquareSelection();
-        //        PrintValueBoard();
-        //        PrintRevealedBoard();
-        //    }
-
-        //    if (m_PlayingBoard.CheckIfFullyRevealed())
-        //    {
-        //        o_GameStatus = eGameStatus.GameFinished;
-        //    }
-        //    else
-        //    {
-        //        o_GameStatus = eGameStatus.InProgress;
-        //    }
-        //}
+            int randomSquaresListIndex = rand.Next(0, m_PcAvailableSquaresList.Count - 1);
+            int squareListIndexValue = m_PcAvailableSquaresList[randomSquaresListIndex];
+            Point pcSelectedSquare = Board.ExtractMatrixCordinates(squareListIndexValue, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+            m_PcAvailableSquaresList.Remove(squareListIndexValue);
 
 
-        //public void PlayerVsPcMatch(Player i_FirstPlayer, Player i_PcPlayer, out eGameStatus o_GameStatus)
-        //{
-        //    PrintValueBoard();
-        //    PrintRevealedBoard();
-        //    o_GameStatus = eGameStatus.InProgress;
+            m_PlayingBoard.RevealSquare(pcSelectedSquare);
+            if (m_CurrentPlayer.FirstRevealedSquare == null)
+            {
+                m_CurrentPlayer.FirstRevealedSquare = pcSelectedSquare;
+                o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedFirstSquare;
+            }
+            else
+            {
+                m_CurrentPlayer.SecondRevealedSquare = pcSelectedSquare;
+                o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedSecondSquare;
+            }
 
+            Console.WriteLine(string.Format("PC selected square is {0} of value {1}"
+                , pcSelectedSquare.GetFormated()
+                , m_PlayingBoard.GetSquareValue(pcSelectedSquare)));
 
-        //    while (o_GameStatus == eGameStatus.InProgress)
-        //    {
-        //        PlayerTurn(i_FirstPlayer, ePlayingMode.PlayerVsPc, out o_GameStatus);
-        //        if (o_GameStatus != eGameStatus.GameFinished)
-        //        {
-        //            PcTurn(i_PcPlayer, out o_GameStatus);
-        //        }
-        //    }
-
-        //    if (i_FirstPlayer.Score > i_PcPlayer.Score)
-        //    {
-        //        o_GameStatus = eGameStatus.FirstPlayerWon;
-        //    }
-        //    else
-        //    {
-        //        o_GameStatus = eGameStatus.SecondPlayerWon;
-        //    }
-        //}
-
-        //private int pcSquareSelection(Player i_PcPlayer)
-        //{
-        //    Random rand = new Random();
-
-        //    int randomSquaresListIndex = rand.Next(0, m_PcAvailableSquaresList.Count - 1);
-        //    int squareListIndexValue = m_PcAvailableSquaresList[randomSquaresListIndex];
-        //    Point pcSelectedSquare = Board.ExtractMatrixCordinates(squareListIndexValue, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
-        //    m_PcAvailableSquaresList.Remove(squareListIndexValue);
-        //    i_PcPlayer.FirstRevealedSquare = pcSelectedSquare;
-
-        //    Console.WriteLine(string.Format("PC selected square is {0} of value {1}"
-        //        , pcSelectedSquare.GetFormated()
-        //        , m_PlayingBoard.GetSquareValue(i_PcPlayer.FirstRevealedSquare)));
-
-        //    return squareListIndexValue;
-        //}
+            return squareListIndexValue;
+        }
 
         //public void PcTurn(Player i_PcPlayer, out eGameStatus o_GameStatus)
         //{
@@ -284,15 +214,15 @@ namespace ConsoleUI
 
 
         //    Console.WriteLine(string.Format("PC first selected square is {0} of value {1}"
-        //        ,pcFirstSelectedSquare.GetFormated()
-        //        ,m_PlayingBoard.GetSquareValue(i_PcPlayer.FirstRevealedSquare)));
+        //        , pcFirstSelectedSquare.GetFormated()
+        //        , m_PlayingBoard.GetSquareValue(i_PcPlayer.FirstRevealedSquare)));
 
         //    Console.WriteLine(string.Format("PC second selected square is {0} of value {1}"
-        //        ,pcSecondSelectedSquare.GetFormated()
-        //        ,m_PlayingBoard.GetSquareValue(i_PcPlayer.SecondRevealedSquare)));
+        //        , pcSecondSelectedSquare.GetFormated()
+        //        , m_PlayingBoard.GetSquareValue(i_PcPlayer.SecondRevealedSquare)));
 
         //    //PcSquareSelection(i_CurrentPlayer, playerSelectedSquare, out playerSquareSlectionStatus);
-            
+
         //    if (m_PlayingBoard.GetSquareValue(i_PcPlayer.FirstRevealedSquare) == m_PlayingBoard.GetSquareValue(i_PcPlayer.SecondRevealedSquare))
         //    {
         //        Console.WriteLine(string.Format("Square {0} of value {1} and Square {2} of value {3} MATCH!!!"
@@ -357,6 +287,84 @@ namespace ConsoleUI
         }
 
     }
+
+    //public void PlayerTurn(Player i_CurrentPlayer, ePlayingMode i_PlayingMode, out eGameStatus o_GameStatus)
+    //{
+    //    eSquareSelectionStatus playerSquareSlectionStatus = eSquareSelectionStatus.AwaitingSelection;
+    //    while (playerSquareSlectionStatus != eSquareSelectionStatus.PlayerRevealedSecondSquare)
+    //    {
+    //        Point playerSelectedSquare = new Point();
+    //        string userInput;
+    //        int parsedUserInput;
+    //        string revealedSquareNum;
+
+    //        if (i_CurrentPlayer.FirstRevealedSquare == null)
+    //        {
+    //            revealedSquareNum = "FIRST";
+    //        }
+    //        else
+    //        {
+    //            revealedSquareNum = "SECOND";
+    //        };
+
+    //        Console.WriteLine(string.Format("Please enter {0} square row:", revealedSquareNum));
+    //        userInput = Console.ReadLine();
+    //        if (int.TryParse(userInput, out parsedUserInput))
+    //        {
+    //            playerSelectedSquare.X = parsedUserInput - 1;
+    //        }
+    //        Console.WriteLine(string.Format("Please enter {0} square row:", revealedSquareNum));
+    //        userInput = Console.ReadLine();
+    //        if (int.TryParse(userInput, out parsedUserInput))
+    //        {
+    //            playerSelectedSquare.Y = parsedUserInput - 1;
+    //        }
+
+    //        PlayerSquareSelection(i_CurrentPlayer, playerSelectedSquare, out playerSquareSlectionStatus);
+    //    }
+
+    //    if (m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare) == m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare))
+    //    {
+    //        Console.WriteLine(string.Format("Square {0} of value {1} and Square {2} of value {3} MATCH!!!"
+    //            , i_CurrentPlayer.FirstRevealedSquare.GetFormated()
+    //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare)
+    //            , i_CurrentPlayer.SecondRevealedSquare.GetFormated()
+    //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare)));
+    //        i_CurrentPlayer.Score++;
+    //        if (i_PlayingMode == ePlayingMode.PlayerVsPc)
+    //        {
+    //            int firstSquareListValue = Board.CalculateListIndex(i_CurrentPlayer.FirstRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+    //            int secondSquareListValue = Board.CalculateListIndex(i_CurrentPlayer.SecondRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+    //            m_PcAvailableSquaresList.Remove(firstSquareListValue);
+    //            m_PcAvailableSquaresList.Remove(secondSquareListValue);
+    //        }
+    //        i_CurrentPlayer.ResetSquareSelection();
+    //        PrintValueBoard();
+    //        PrintRevealedBoard();
+    //    }
+    //    else
+    //    {
+    //        Console.WriteLine(string.Format("Square {0} of value {1} and Square {2} of value {3} DOESN'T match!"
+    //            ,i_CurrentPlayer.FirstRevealedSquare.GetFormated()
+    //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.FirstRevealedSquare)
+    //            , i_CurrentPlayer.SecondRevealedSquare.GetFormated()
+    //            , m_PlayingBoard.GetSquareValue(i_CurrentPlayer.SecondRevealedSquare)));
+    //        m_PlayingBoard.UnRevealSquare(i_CurrentPlayer.FirstRevealedSquare);
+    //        m_PlayingBoard.UnRevealSquare(i_CurrentPlayer.SecondRevealedSquare);
+    //        i_CurrentPlayer.ResetSquareSelection();
+    //        PrintValueBoard();
+    //        PrintRevealedBoard();
+    //    }
+
+    //    if (m_PlayingBoard.CheckIfFullyRevealed())
+    //    {
+    //        o_GameStatus = eGameStatus.GameFinished;
+    //    }
+    //    else
+    //    {
+    //        o_GameStatus = eGameStatus.InProgress;
+    //    }
+    //}
 
     public enum eSquareSelectionStatus
     {

@@ -10,9 +10,8 @@ namespace ConsoleUI
         private readonly string m_Name;
         private int m_CurrentScore = 0;
         private Point m_FirstRevealedSquare = null;
-        //private bool m_IsFirstSquareRevealed;
         private Point m_SecondRevealedSquare = null;
-        //private bool m_IsSecondSquareRevealed;
+        private bool m_IsPc = false;
 
         public Player(string i_PlayerName)
         {
@@ -39,12 +38,14 @@ namespace ConsoleUI
 
         public void ResetSquareSelection()
         {
-            //m_FirstRevealedSquare.Set(-1, -1);
-            //m_SecondRevealedSquare.Set(-2, -2);
-            //m_IsFirstSquareRevealed = false;
-            //m_IsSecondSquareRevealed = false;
             m_FirstRevealedSquare = null;
             m_SecondRevealedSquare = null;
+        }
+
+        public bool IsPc
+        {
+            get { return m_IsPc; }
+            set { m_IsPc = value; }
         }
     }
 }
