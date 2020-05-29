@@ -47,67 +47,77 @@ namespace ConsoleUI
 
         public static void PlayerUiMatch()
         {
-            Player player1 = new Player("Shahar");
-            Player player2 = new Player("Sharon");
-            Game game = new Game(4, 4, player1, player2);
-            //PrintValueBoard();
-            //PrintRevealedBoard();
+            ConsoleUI UI = new ConsoleUI();
+            string firstPlayerName, secondPlayerName;
+            int boardRows, boardCols;
+            Game.ePlayingMode playingMode;
+
+            UI.PrintWelcomeMessage();
+            firstPlayerName = UI.GetUserName();
+            UI.GetPlayMode(out playingMode);
+
+            if (playingMode == ePlayingMode.PlayerVsPlayer)
+            {
+                secondPlayerName = UI.GetUserName();
+            }
+            else
+            {
+                secondPlayerName = "Computer";
+            }
+
+            Player player1 = new Player(firstPlayerName);
+            Player player2 = new Player(secondPlayerName);
+
+            UI.GetBoardDimentions(out boardRows, out boardCols);
+            
+            Game thisGame = new Game(boardRows, boardCols, player1, player2);
+
             eGameStatus gameStatus;
             eSquareSelectionStatus squareSelectionStatus;
+
+            UI.DrawBoard(thisGame.PlayingBoard);  //%add properties (Game.cs)
+
             do
             {
-                Point playerSelectedSquare = new Point();
-                string userInput;
-                int parsedUserInput;
+                Point playerSelectedTile = new Point();
+                playerSelectedTile = UI.GetUserChoice();
 
-                Console.WriteLine(string.Format("Please enter square row:"));
-                userInput = Console.ReadLine();
-                if (int.TryParse(userInput, out parsedUserInput))
-                {
-                    playerSelectedSquare.X = parsedUserInput - 1;
-                }
-
-                Console.WriteLine(string.Format("Please enter square col:"));
-                userInput = Console.ReadLine();
-                if (int.TryParse(userInput, out parsedUserInput))
-                {
-                    playerSelectedSquare.Y = parsedUserInput - 1;
-                }
-
-                game.PlayerMove(playerSelectedSquare, ePlayingMode.PlayerVsPlayer, out squareSelectionStatus, out gameStatus);
-                notifyMoveResult(squareSelectionStatus, playerSelectedSquare);
+                thisGame.PlayerMove(playerSelectedTile, playingMode, out squareSelectionStatus, out gameStatus);
+                notifyMoveResult(squareSelectionStatus, playerSelectedTile);
             }
-            while (gameStatus == eGameStatus.InProgress);
+            while (gameStatus == eGameStatus.InProgress); //%-why this isnt while eStatus!=GameFinished???
+
+            UI.PrintEndGameSummery(thisGame);
         }
 
-        public static StringBuilder GenerateConsoleBoard(int i_NumOfRows, int i_NumOfCols)
-        {
-            StringBuilder board = new StringBuilder();
-            board.Append("   ");
-            for (int j = 0; j < i_NumOfCols; j++)
-            {
-                board.Append(String.Format("  {0} ",  (char)('A' + j) ));
-            }
-            board.AppendLine();
-            board.Append("   ");
-            board.Append('=', i_NumOfCols * 4 + 1);
-            board.AppendLine();
+    //    public static StringBuilder GenerateConsoleBoard(int i_NumOfRows, int i_NumOfCols)
+    //    {
+    //        StringBuilder board = new StringBuilder();
+    //        board.Append("   ");
+    //        for (int j = 0; j < i_NumOfCols; j++)
+    //        {
+    //            board.Append(String.Format("  {0} ",  (char)('A' + j) ));
+    //        }
+    //        board.AppendLine();
+    //        board.Append("   ");
+    //        board.Append('=', i_NumOfCols * 4 + 1);
+    //        board.AppendLine();
 
-            for (int i = 1; i <= i_NumOfRows; i++)
-            {
-                board.Append(String.Format(" {0} ",i.ToString()));
-                // %TBD - remove secondary loop
-                for (int j = 0; j <= i_NumOfCols; j++)
-                {
-                    board.Append("|   ");
-                }
-                board.AppendLine();
-                board.Append("   ");
-                board.Append('=', i_NumOfCols * 4 + 1);
-                board.AppendLine();
-            }
+    //        for (int i = 1; i <= i_NumOfRows; i++)
+    //        {
+    //            board.Append(String.Format(" {0} ",i.ToString()));
+    //            // %TBD - remove secondary loop
+    //            for (int j = 0; j <= i_NumOfCols; j++)
+    //            {
+    //                board.Append("|   ");
+    //            }
+    //            board.AppendLine();
+    //            board.Append("   ");
+    //            board.Append('=', i_NumOfCols * 4 + 1);
+    //            board.AppendLine();
+    //        }
 
-            return board;
-        }
-    }
+    //        return board;
+    //    }
+    //}
 }
