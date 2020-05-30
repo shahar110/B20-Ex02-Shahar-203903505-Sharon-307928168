@@ -7,7 +7,7 @@ namespace ConsoleUI
 {
     public class Board
     {
-        private Square[,] m_BoardMatrix = null;
+        private readonly Square[,] m_BoardMatrix = null;
         private readonly Point m_BoardSize = new Point(0, 0);
 
         public Board(int i_BoardGridRows, int i_BoardGridCols)

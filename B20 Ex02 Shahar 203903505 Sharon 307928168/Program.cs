@@ -13,9 +13,9 @@ namespace ConsoleUI
         {
             
             //GameHandler game = new GameHandler();
-            StringBuilder board = GameHandlerUI.GenerateConsoleBoard(4,6);
-            Console.WriteLine(board);
-            Console.WriteLine("-------------------------------------------");
+            //StringBuilder board = GameHandlerUI.GenerateConsoleBoard(4,6);
+            //Console.WriteLine(board);
+            //Console.WriteLine("-------------------------------------------");
             //char[,] test = Board.generateLettersGrid(6, 6);
             //Board pBoard = new Board(rows, columns);
 
@@ -45,7 +45,7 @@ namespace ConsoleUI
             //game.PlayerVsPcMatch(player1, player2, out gameStatus);
 
 
-            GameHandlerUI.PlayerUiMatch();
+            GameHandlerUI.LaunchGame();
         }
     }
 }

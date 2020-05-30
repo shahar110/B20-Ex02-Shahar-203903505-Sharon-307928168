@@ -5,13 +5,23 @@ using System.Text;
 
 namespace ConsoleUI
 {
+
     public class ConsoleUI
     {
+        //public enum eBoardSizeSelection
+        //{
+        //    InvalidBoardSelection,
+        //    Board_4X4,
+        //    Board_4X6,
+        //    Board_6X4,
+        //    Board_6X6,
+        //}
+
         public void DrawBoard(Board i_PlayingBoard)
         {
             Ex02.ConsoleUtils.Screen.Clear();
             Console.Write("    ");
-            for (int j = 0; j < i_PlayingBoard.NumOfCols; j++)
+            for (int j = 0; j < i_PlayingBoard.BoardSize.Y; j++)
             {
                 Console.Write(String.Format("{0, -4}", (char)('A' + j)));
             }
@@ -19,17 +29,17 @@ namespace ConsoleUI
             Console.WriteLine();
             StringBuilder seperatorLine = new StringBuilder();
             seperatorLine.Append("  ");
-            seperatorLine.Append('=', i_PlayingBoard.NumOfCols * 4 + 1);
+            seperatorLine.Append('=', i_PlayingBoard.BoardSize.Y * 4 + 1);
             Console.WriteLine(seperatorLine);
 
-            for (int i = 0; i < i_PlayingBoard.NumOfRows; i++)
+            for (int i = 0; i < i_PlayingBoard.BoardSize.X; i++)
             {
                 Console.Write(String.Format("{0} |", i + 1));
-                for (int j = 0; j < i_PlayingBoard.NumOfCols; j++)
+                for (int j = 0; j < i_PlayingBoard.BoardSize.Y; j++)
                 {
-                    if (i_PlayingBoard.BoardMatrix[i, j].IsReaveled)
+                    if (i_PlayingBoard.Matrix[i, j].IsRevealed)
                     {
-                        Console.Write(String.Format(" {0} ", i_PlayingBoard.BoardMatrix[i, j].Value));
+                        Console.Write(String.Format(" {0} ", i_PlayingBoard.Matrix[i, j].Value));
                     }
                     else
                     {
@@ -45,50 +55,85 @@ namespace ConsoleUI
 
         public void GetBoardDimentions(out int o_NumOfCols, out int o_NumOfRows)
         {
-            Console.WriteLine("Please enter requested board size (available sizes are 4X4, 4X6, 6X4 or 6X6).");
-
-            Console.Write("Number of columns: ");
-            int requestedNumOfCols;
-            string numOfCols = Console.ReadLine();
-
-            while (!int.TryParse(numOfCols, out requestedNumOfCols))
+            Console.WriteLine(string.Format(
+@"Please enter the desired board size:
+1. 4X4
+2. 4X6
+3. 6X4
+4. 6X6"));
+            bool isSelectionValid = true;
+            do
             {
-                Console.Write("Bad input, please enter a valid number:");
-                numOfCols = Console.ReadLine();
+                string userInput = Console.ReadLine();
+                o_NumOfCols = 0;
+                o_NumOfRows = 0;
+
+                switch (userInput)
+                {
+                    case "1":
+                        o_NumOfCols = 4;
+                        o_NumOfRows = 4;
+                        break;
+
+                    case "2":
+                        o_NumOfCols = 4;
+                        o_NumOfRows = 6;
+                        break;
+
+                    case "3":
+                        o_NumOfCols = 6;
+                        o_NumOfRows = 4;
+                        break;
+
+                    case "4":
+                        o_NumOfCols = 6;
+                        o_NumOfRows = 6;
+                        break;
+
+                    default:
+                        Console.WriteLine(string.Format("Invalid board size selection!{0}Please try again...", Environment.NewLine));
+                        isSelectionValid = false;
+                        break;
+                }
             }
+            while (!isSelectionValid);
 
-            Console.Write("Number of rows: ");
-            int requestedNumOfRows;
-            string numOfRows = Console.ReadLine();
-
-            while (!int.TryParse(numOfCols, out requestedNumOfRows))
-            {
-                Console.WriteLine("Bad input, please enter a valid number:");
-                numOfCols = Console.ReadLine();
-            }
-
-            o_NumOfCols = requestedNumOfCols;
-            o_NumOfRows = requestedNumOfRows;
         }
 
-        public void GetPlayMode(out Game.ePlayingMode o_PlayingMode)
+        public void GetPlayingMode(out Game.ePlayingMode o_PlayingMode)
         {
-            Game.ePlayingMode secondPlayerTypeChoice = Game.ePlayingMode.PlayerVsPlayer;
-            Console.WriteLine("Press 'y' to play against human player, or " +
-                              "press any other key to play againt the computer");
-            string userInput = Console.ReadLine();
+            Console.WriteLine(String.Format(
+@"Please select the desired playing mode:
+1. Multiplayer (Player VS Player)
+2. Single (VS PC)"
+            ));
 
-            if (!userInput.Equals("y"))
+            do
             {
-                secondPlayerTypeChoice = Game.ePlayingMode.PlayerVsPc;
-            }
+                string userInput = Console.ReadLine();
 
-            o_PlayingMode = secondPlayerTypeChoice;
+                switch (userInput)
+                {
+                    case "1":
+                        o_PlayingMode = Game.ePlayingMode.PlayerVsPlayer;
+                        break;
+
+                    case "2":
+                        o_PlayingMode = Game.ePlayingMode.PlayerVsPc;
+                        break;
+
+                    default:
+                        Console.WriteLine(string.Format("Invalid game mode selection!{0}Please try again...", Environment.NewLine));
+                        o_PlayingMode = Game.ePlayingMode.InvalidModeSelection;
+                        break;
+                }
+            }
+            while (o_PlayingMode == Game.ePlayingMode.InvalidModeSelection);
         }
 
         public string GetUserName()
         {
-            Console.WriteLine("Please enter player name: ");
+            Console.WriteLine("Please enter Player name: ");
             string userName = Console.ReadLine();
             return userName;
         }
@@ -98,21 +143,33 @@ namespace ConsoleUI
             Console.WriteLine("Hello! Welcome to Memory-Game");
         }
 
-        public Point GetUserChoice()
+        public void GetUserChoice(out Point o_SquareSelection, out bool o_ToQuit)
         {
-            Console.Write("Please choose a tile: ");
+            Console.Write("Please select a square to reveal, enter or 'Q' to quit:");
             string userChoice = Console.ReadLine();
+            o_SquareSelection = null;
+            o_ToQuit = false;
 
-            while (!isValidChoice(userChoice))
+            if (!userChoice.Equals("Q"))
             {
-                Console.WriteLine("Your choice is not of type Letter and number, please try again:");
-                userChoice = Console.ReadLine();
+                while (!isValidChoice(userChoice))
+                {
+                    Console.WriteLine(string.Format(
+@"Your selection is not in the right format.
+Please enter the column Letter followed by the row number with no spaces in between (e.g: B3)"));
+                    userChoice = Console.ReadLine();
+                }
+
+                int matrixCol = convertColumn(userChoice[0]);
+                int matrixRow = convertRow(userChoice[1]);
+
+                o_SquareSelection = new Point(matrixRow, matrixCol);
+            }
+            else
+            {
+                o_ToQuit = true;
             }
 
-            int matrixCol = convertColumn(userChoice[0]);
-            int matrixRow = convertRow(userChoice[1]);
-
-            return new Point(matrixRow, matrixCol);
         }
 
         private int convertColumn(char i_ColumnLetter)
@@ -172,20 +229,38 @@ namespace ConsoleUI
             Console.WriteLine("Thank you for playing, Goodbye! (:");
         }
 
-        public void PrintEndGameSummery(Game i_Game)
+        public void PrintEndGameSummary(Game i_Game, Game.eGameStatus i_GameStatus)
         {
-            string summeryMessage = string.Format(
+            StringBuilder gameResultMessage = new StringBuilder();
+            switch (i_GameStatus)
+            {
+                case Game.eGameStatus.FirstPlayerWon:
+                    gameResultMessage.Append("The Winner is: ");
+                    gameResultMessage.Append(i_Game.FirstPlayer.Name);
+                    break;
+
+                case Game.eGameStatus.SecondPlayerWon:
+                    gameResultMessage.Append("The Winner is: ");
+                    gameResultMessage.Append(i_Game.SecondPlayer.Name);
+                    break;
+
+                case Game.eGameStatus.GameTie:
+                    gameResultMessage.Append("Game Tie!");
+                    break;
+            }
+
+            string summaryMessage = string.Format(
 @"Game finished!
-The Winner is: {0}
+{0}
 {1}'s score: {2}
 {3}'s score: {4}",
-                i_Game.Winner.Name,
+                gameResultMessage,
                 i_Game.FirstPlayer.Name,
-                i_Game.FirstPlayerScore,
+                i_Game.FirstPlayer.Score,
                 i_Game.SecondPlayer.Name,
-                i_Game.SecondPlayerScore);
+                i_Game.SecondPlayer.Score);
 
-            Console.WriteLine(summeryMessage);
+            Console.WriteLine(summaryMessage);
         }
     }
 }

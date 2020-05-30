@@ -11,11 +11,17 @@ namespace ConsoleUI
         private int m_CurrentScore = 0;
         private Point m_FirstRevealedSquare = null;
         private Point m_SecondRevealedSquare = null;
-        private bool m_IsPc = false;
+        private readonly bool m_IsPc = false;
 
-        public Player(string i_PlayerName)
+        public Player(string i_PlayerName, bool i_IsPc)
         {
             m_Name = i_PlayerName;
+            m_IsPc = i_IsPc;
+        }
+
+        public string Name
+        {
+            get { return m_Name; }
         }
 
         public Point FirstRevealedSquare
@@ -45,7 +51,6 @@ namespace ConsoleUI
         public bool IsPc
         {
             get { return m_IsPc; }
-            set { m_IsPc = value; }
         }
     }
 }
