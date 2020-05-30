@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
     public class RememberedItem
     {

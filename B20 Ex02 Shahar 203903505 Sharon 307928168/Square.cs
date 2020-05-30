@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
     public class Square
     {
-        private readonly char m_Value;
+        private readonly int m_Value;
         private bool m_IsRevealed = false;
 
-        public Square(char i_SquareValue)
+        public Square(int i_SquareValue)
         {
             m_Value = i_SquareValue;
         }
 
-        public char Value
+        public int Value
         {
             get { return m_Value; }
         }

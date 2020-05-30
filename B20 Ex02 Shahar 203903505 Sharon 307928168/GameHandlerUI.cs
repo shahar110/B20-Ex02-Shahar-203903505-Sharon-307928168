@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
     public class GameHandlerUI
     {
-        //private Game currentGame;
-
-        public static void Start()
-        {
-            Console.WriteLine();
-        }
-
         private static void notifyMoveResult(Game.eTileSelectionStatus squareSelectionStatus, Point i_SelectedSquare, Game i_Game, ConsoleUI i_UI)
         {
             switch (squareSelectionStatus)
@@ -28,17 +21,17 @@ namespace ConsoleUI
                     if (i_Game.CurrentPlayer.IsPc == true)
                     {
                         System.Threading.Thread.Sleep(1000);
-                        i_UI.DrawBoard(i_Game.PlayingBoard);
+                        i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                         System.Threading.Thread.Sleep(2000);
                     }
                     else
                     {
-                        i_UI.DrawBoard(i_Game.PlayingBoard);
+                        i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     }
                     break;
 
                 case Game.eTileSelectionStatus.PlayerRevealedSecondSquare:
-                    i_UI.DrawBoard(i_Game.PlayingBoard);
+                    i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     break;
 
                 default:
@@ -51,12 +44,12 @@ namespace ConsoleUI
             switch (playerMoveEvaluationStatus)
             {
                 case Game.ePlayerMoveEvaluationStatus.SquaresMatch:
-                    i_UI.DrawBoard(i_Game.PlayingBoard);
+                    i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     break;
 
                 case Game.ePlayerMoveEvaluationStatus.SquaresDontMatch:
                     System.Threading.Thread.Sleep(2000);
-                    i_UI.DrawBoard(i_Game.PlayingBoard);
+                    i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     break;
             }
         }
@@ -67,7 +60,7 @@ namespace ConsoleUI
             Game.eTileSelectionStatus squareSelectionStatus = Game.eTileSelectionStatus.Undefined;
             Game.ePlayerMoveEvaluationStatus playerMoveEvaluationStatus = Game.ePlayerMoveEvaluationStatus.Undefined;
 
-            i_UI.DrawBoard(i_Game.PlayingBoard);
+            i_UI.DrawLettersBoard(i_Game.PlayingBoard);
             bool toQuit = false;
 
             do
@@ -101,15 +94,11 @@ namespace ConsoleUI
                     notifyEvaluationResult(playerMoveEvaluationStatus, playerSelectedTile, i_Game, i_UI);
                 }
             }
-            while (gameStatus == Game.eGameStatus.InProgress && !toQuit); //%-why this isnt while eStatus!=GameFinished???
+            while (gameStatus == Game.eGameStatus.InProgress && !toQuit);
 
             if (!toQuit)
             {
                 i_UI.PrintEndGameSummary(i_Game, gameStatus);
-            }
-            else
-            {
-                Console.WriteLine("Good Bye!");
             }
         }
 
@@ -142,7 +131,7 @@ namespace ConsoleUI
 
                 PlayGame(thisGame, playingMode, UI);
 
-                Console.WriteLine("Another round? Press 'y' for yes, press any other key to quit");
+                UI.PrintAnotherRoundMessage();                
                 string userInput = Console.ReadLine();
                 isAnotherRound = userInput.ToLower().Equals("y") ? true : false;
 
@@ -155,76 +144,5 @@ namespace ConsoleUI
 
             UI.PrintGoodByeMessage();
         }
-
-        //public static void PlayerVsPcMatch()
-        //{
-        //    Player player1 = new Player("Shahar");
-        //    Player player2 = new Player("PC");
-        //    player2.IsPc = true;
-
-        //    Game game = new Game(4, 4, player1, player2);
-        //    Game.eGameStatus gameStatus;
-        //    Game.eTileSelectionStatus squareSelectionStatus;
-        //    game.PrintValueBoard();
-        //    game.PrintRevealedBoard();
-        //    do
-        //    {
-        //        Point playerSelectedSquare = new Point();
-        //        if (game.CurrentPlayer.IsPc == false)
-        //        {
-        //            string userInput;
-        //            int parsedUserInput;
-
-        //            Console.WriteLine(string.Format("Please enter square row:"));
-        //            userInput = Console.ReadLine();
-        //            if (int.TryParse(userInput, out parsedUserInput))
-        //            {
-        //                playerSelectedSquare.X = parsedUserInput - 1;
-        //            }
-
-        //            Console.WriteLine(string.Format("Please enter square col:"));
-        //            userInput = Console.ReadLine();
-        //            if (int.TryParse(userInput, out parsedUserInput))
-        //            {
-        //                playerSelectedSquare.Y = parsedUserInput - 1;
-        //            }
-        //        }
-
-        //        //game.PlayerMove(playerSelectedSquare, Game.ePlayingMode.PlayerVsPc, out squareSelectionStatus, out gameStatus);
-        //        //notifyMoveResult(squareSelectionStatus, playerSelectedSquare, game);
-        //    }
-        //    while (gameStatus == Game.eGameStatus.InProgress);
-        //}
-
-        //    public static StringBuilder GenerateConsoleBoard(int i_NumOfRows, int i_NumOfCols)
-        //    {
-        //        StringBuilder board = new StringBuilder();
-        //        board.Append("   ");
-        //        for (int j = 0; j < i_NumOfCols; j++)
-        //        {
-        //            board.Append(String.Format("  {0} ",  (char)('A' + j) ));
-        //        }
-        //        board.AppendLine();
-        //        board.Append("   ");
-        //        board.Append('=', i_NumOfCols * 4 + 1);
-        //        board.AppendLine();
-
-        //        for (int i = 1; i <= i_NumOfRows; i++)
-        //        {
-        //            board.Append(String.Format(" {0} ",i.ToString()));
-        //            // %TBD - remove secondary loop
-        //            for (int j = 0; j <= i_NumOfCols; j++)
-        //            {
-        //                board.Append("|   ");
-        //            }
-        //            board.AppendLine();
-        //            board.Append("   ");
-        //            board.Append('=', i_NumOfCols * 4 + 1);
-        //            board.AppendLine();
-        //        }
-
-        //        return board;
-        //    }
-        //}
     }
 }

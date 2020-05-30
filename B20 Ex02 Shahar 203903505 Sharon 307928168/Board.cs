@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
     public class Board
     {
@@ -26,7 +25,7 @@ namespace ConsoleUI
             get { return m_BoardSize; }
         }
 
-        public char GetSquareValue(Point i_SelectedSquare)
+        public int GetSquareValue(Point i_SelectedSquare)
         {
             return m_BoardMatrix[i_SelectedSquare.X, i_SelectedSquare.Y].Value;
         }
@@ -79,15 +78,13 @@ namespace ConsoleUI
 
         private Square[,] generatePlayingBoard(int i_NumOfRows, int i_NumOfCols)
         {
-            char[,] dummyBoard = generateLettersGrid(i_NumOfRows, i_NumOfCols);
+            int[,] dummyBoard = generateGridValues(i_NumOfRows, i_NumOfCols);
             Square[,] newBoard = new Square[i_NumOfRows, i_NumOfCols];
 
             for (int i = 0; i < i_NumOfRows; i++)
             {
                 for (int j = 0; j < i_NumOfCols; j++)
-                {
-                    // %TBD - change the name of Point class
-                    char currentGridColumn = (char)('A' + j);
+                {                   
                     newBoard[i, j] = new Square(dummyBoard[i, j]);
                 }
             }
@@ -95,10 +92,9 @@ namespace ConsoleUI
             return newBoard;
         }
 
-        public static char[,] generateLettersGrid(int i_NumOfRows, int i_NumOfCols)
+        public static int[,] generateGridValues(int i_NumOfRows, int i_NumOfCols)
         {
-            char[,] lettersGrid = new char[i_NumOfRows, i_NumOfCols];
-            char[] m_LettersArr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+            int[,] grid = new int[i_NumOfRows, i_NumOfCols];
 
             List<int> gridList = new List<int>();
             FillGridList(gridList, i_NumOfRows * i_NumOfCols);
@@ -106,14 +102,14 @@ namespace ConsoleUI
             int lettersCounter = 0;
 
             Random rand = new Random();
-            foreach (char letter in m_LettersArr)
+            for (int i = 0; i < totalGridLength/2 ; i++)
             {
-                for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 2; j++)
                 {
                     int randomIndex = rand.Next(0, gridList.Count - 1);
                     int indexValue = gridList[randomIndex];
-                    Point gridCordinate = ExtractMatrixCordinates(indexValue, i_NumOfRows, i_NumOfCols);
-                    lettersGrid[gridCordinate.X, gridCordinate.Y] = letter;
+                    Point gridCoordinate = ExtractMatrixCoordinates(indexValue, i_NumOfRows, i_NumOfCols);
+                    grid[gridCoordinate.X, gridCoordinate.Y] = i;
                     gridList.RemoveAt(randomIndex);
                 }
                 lettersCounter += 2;
@@ -123,7 +119,7 @@ namespace ConsoleUI
                 }
             }
 
-            return lettersGrid;
+            return grid;
         }
 
         public static void FillGridList(List<int> i_ListToFill, int i_LengthToFill)
@@ -134,7 +130,7 @@ namespace ConsoleUI
             }
         }
 
-        public static Point ExtractMatrixCordinates(int i_ListIndex, int i_NumOfRows, int i_NumOfCols)
+        public static Point ExtractMatrixCoordinates(int i_ListIndex, int i_NumOfRows, int i_NumOfCols)
         {
             int columnNum = i_ListIndex % i_NumOfCols;
             int rowNum = i_ListIndex / i_NumOfCols;

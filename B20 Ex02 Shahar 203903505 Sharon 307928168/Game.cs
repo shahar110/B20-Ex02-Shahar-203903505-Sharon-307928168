@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
     public class Game
     {
@@ -50,7 +49,7 @@ namespace ConsoleUI
         }
 
         public Game(int i_BoardNumOfRows, int i_BoardNumOfCols, string i_FirstPlayerName, 
-            string i_SecondPlayerName, ePlayingMode i_PlayingMode)
+                    string i_SecondPlayerName, ePlayingMode i_PlayingMode)
         {
             bool isPc = i_PlayingMode == ePlayingMode.PlayerVsPc ? true : false;
             m_PlayingBoard = new Board(i_BoardNumOfRows, i_BoardNumOfCols);
@@ -207,7 +206,7 @@ namespace ConsoleUI
 
             int randomSquaresListIndex = rand.Next(0, m_PcAvailableSquaresList.Count - 1);
             int squareListIndexValue = m_PcAvailableSquaresList[randomSquaresListIndex];
-            Point pcSelectedSquare = Board.ExtractMatrixCordinates(squareListIndexValue, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
+            Point pcSelectedSquare = Board.ExtractMatrixCoordinates(squareListIndexValue, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
             m_PcAvailableSquaresList.Remove(squareListIndexValue);
 
             m_PlayingBoard.RevealSquare(pcSelectedSquare);
@@ -224,31 +223,5 @@ namespace ConsoleUI
 
             return squareListIndexValue;
         }
-
-        public void PrintRevealedBoard()
-        {
-            for (int i = 0; i < m_PlayingBoard.BoardSize.X; i++)
-            {
-                for (int j = 0; j < m_PlayingBoard.BoardSize.Y; j++)
-                {
-                    Console.Write(String.Format("{0,-10}", m_PlayingBoard.Matrix[i, j].IsRevealed));
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine("\n-------------------------------------------\n");
-        }
-
-        public void PrintValueBoard()
-        {
-            for (int i = 0; i < m_PlayingBoard.BoardSize.X; i++)
-            {
-                for (int j = 0; j < m_PlayingBoard.BoardSize.Y; j++)
-                {
-                    Console.Write(String.Format("{0,-5}", m_PlayingBoard.Matrix[i, j].Value));
-                }
-                Console.WriteLine();
-            }
-        }
-
     }    
 }

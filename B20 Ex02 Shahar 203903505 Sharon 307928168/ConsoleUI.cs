@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace ConsoleUI
+namespace B20_Ex02_MemoryGame
 {
 
     public class ConsoleUI
     {
-        //public enum eBoardSizeSelection
-        //{
-        //    InvalidBoardSelection,
-        //    Board_4X4,
-        //    Board_4X6,
-        //    Board_6X4,
-        //    Board_6X6,
-        //}
-
-        public void DrawBoard(Board i_PlayingBoard)
+        public void DrawLettersBoard(Board i_PlayingBoard)
         {
+            char letterToPrint;
+
             Ex02.ConsoleUtils.Screen.Clear();
             Console.Write("    ");
             for (int j = 0; j < i_PlayingBoard.BoardSize.Y; j++)
@@ -39,7 +31,8 @@ namespace ConsoleUI
                 {
                     if (i_PlayingBoard.Matrix[i, j].IsRevealed)
                     {
-                        Console.Write(String.Format(" {0} ", i_PlayingBoard.Matrix[i, j].Value));
+                        letterToPrint = (char)(i_PlayingBoard.Matrix[i, j].Value + 'A');
+                        Console.Write(String.Format(" {0} ", letterToPrint));
                     }
                     else
                     {
@@ -133,7 +126,7 @@ namespace ConsoleUI
 
         public string GetUserName()
         {
-            Console.WriteLine("Please enter Player name: ");
+            Console.WriteLine("Please enter player name: ");
             string userName = Console.ReadLine();
             return userName;
         }
@@ -145,7 +138,7 @@ namespace ConsoleUI
 
         public void GetUserChoice(out Point o_SquareSelection, out bool o_ToQuit)
         {
-            Console.Write("Please select a square to reveal, enter or 'Q' to quit:");
+            Console.Write("Please select a square to reveal, or enter 'Q' to quit current game:");
             string userChoice = Console.ReadLine();
             o_SquareSelection = null;
             o_ToQuit = false;
@@ -211,7 +204,7 @@ Please enter the column Letter followed by the row number with no spaces in betw
 
         public void PrintAnotherRoundMessage()
         {
-            Console.WriteLine("Would you like another round?");
+            Console.WriteLine("Would you like another round? Press 'y' for yes, press any other key to quit");
         }
 
         public void PrintTileOutOfRange()
@@ -231,7 +224,8 @@ Please enter the column Letter followed by the row number with no spaces in betw
 
         public void PrintEndGameSummary(Game i_Game, Game.eGameStatus i_GameStatus)
         {
-            StringBuilder gameResultMessage = new StringBuilder();
+            StringBuilder gameResultMessage = new StringBuilder();  
+
             switch (i_GameStatus)
             {
                 case Game.eGameStatus.FirstPlayerWon:
@@ -259,7 +253,7 @@ Please enter the column Letter followed by the row number with no spaces in betw
                 i_Game.FirstPlayer.Score,
                 i_Game.SecondPlayer.Name,
                 i_Game.SecondPlayer.Score);
-
+            
             Console.WriteLine(summaryMessage);
         }
     }
