@@ -139,6 +139,7 @@ namespace B20_Ex02_MemoryGame
         {
             Console.Write("Please select a square to reveal, or enter 'Q' to quit current game:");
             string userChoice = Console.ReadLine();
+            userChoice = userChoice.ToUpper();
             o_SquareSelection = null;
             o_ToQuit = false;
 
@@ -201,7 +202,7 @@ Please enter the column Letter followed by the row number with no spaces in betw
 
         public void PrintAnotherRoundMessage()
         {
-            Console.WriteLine("Would you like another round? Press 'y' for yes, press any other key to quit");
+            Console.WriteLine("Would you like another round? Press 'Y' for yes, press any other key to quit");
         }
 
         public void PrintSquareOutOfRange()

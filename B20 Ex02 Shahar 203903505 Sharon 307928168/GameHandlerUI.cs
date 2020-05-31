@@ -134,7 +134,8 @@ namespace B20_Ex02_MemoryGame
 
                 UI.PrintAnotherRoundMessage();                
                 string userInput = Console.ReadLine();
-                isAnotherRound = userInput.ToLower().Equals("y") ? true : false;
+                userInput = userInput.ToUpper();
+                isAnotherRound = userInput.ToLower().Equals("Y") ? true : false;
 
                 if (isAnotherRound == true)
                 {
@@ -144,7 +145,6 @@ namespace B20_Ex02_MemoryGame
             while (isAnotherRound);
 
             UI.PrintGoodByeMessage();
-
         }
     }
 }
