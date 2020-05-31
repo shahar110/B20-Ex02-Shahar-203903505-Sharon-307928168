@@ -15,6 +15,57 @@ namespace B20_Ex02_MemoryGame
             m_BoardSize = new Point(i_BoardGridRows, i_BoardGridCols);
         }
 
+        private static int[,] generateGridValues(int i_NumOfRows, int i_NumOfCols)
+        {
+            int[,] grid = new int[i_NumOfRows, i_NumOfCols];
+
+            List<int> gridList = new List<int>();
+            FillGridList(gridList, i_NumOfRows * i_NumOfCols);
+            int totalGridLength = gridList.Count;
+            int lettersCounter = 0;
+
+            Random rand = new Random();
+            for (int i = 0; i < totalGridLength / 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int randomIndex = rand.Next(0, gridList.Count - 1);
+                    int indexValue = gridList[randomIndex];
+                    Point gridCoordinate = ExtractMatrixCoordinates(indexValue, i_NumOfRows, i_NumOfCols);
+                    grid[gridCoordinate.X, gridCoordinate.Y] = i;
+                    gridList.RemoveAt(randomIndex);
+                }
+
+                lettersCounter += 2;
+                if (lettersCounter >= totalGridLength)
+                {
+                    break;
+                }
+            }
+
+            return grid;
+        }
+
+        public static void FillGridList(List<int> i_ListToFill, int i_LengthToFill)
+        {
+            for (int i = 0; i < i_LengthToFill; i++)
+            {
+                i_ListToFill.Add(i);
+            }
+        }
+
+        public static Point ExtractMatrixCoordinates(int i_ListIndex, int i_NumOfRows, int i_NumOfCols)
+        {
+            int columnNum = i_ListIndex % i_NumOfCols;
+            int rowNum = i_ListIndex / i_NumOfCols;
+            return new Point(rowNum, columnNum);
+        }
+
+        public static int CalculateListIndex(Point i_MatrixCordinates, int i_NumOfRows, int i_NumOfCols)
+        {
+            return (i_MatrixCordinates.X * i_NumOfCols) + i_MatrixCordinates.Y;
+        }
+
         public Square[,] Matrix
         {
             get { return m_BoardMatrix; }
@@ -56,6 +107,7 @@ namespace B20_Ex02_MemoryGame
             {
                 withinRange = false;
             }
+
             return withinRange;
         }
 
@@ -73,6 +125,7 @@ namespace B20_Ex02_MemoryGame
                     }
                 }
             }
+
             return fullyRevealed;
         }
 
@@ -91,56 +144,5 @@ namespace B20_Ex02_MemoryGame
 
             return newBoard;
         }
-
-        public static int[,] generateGridValues(int i_NumOfRows, int i_NumOfCols)
-        {
-            int[,] grid = new int[i_NumOfRows, i_NumOfCols];
-
-            List<int> gridList = new List<int>();
-            FillGridList(gridList, i_NumOfRows * i_NumOfCols);
-            int totalGridLength = gridList.Count;
-            int lettersCounter = 0;
-
-            Random rand = new Random();
-            for (int i = 0; i < totalGridLength/2 ; i++)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    int randomIndex = rand.Next(0, gridList.Count - 1);
-                    int indexValue = gridList[randomIndex];
-                    Point gridCoordinate = ExtractMatrixCoordinates(indexValue, i_NumOfRows, i_NumOfCols);
-                    grid[gridCoordinate.X, gridCoordinate.Y] = i;
-                    gridList.RemoveAt(randomIndex);
-                }
-                lettersCounter += 2;
-                if (lettersCounter >= totalGridLength)
-                {
-                    break;
-                }
-            }
-
-            return grid;
-        }
-
-        public static void FillGridList(List<int> i_ListToFill, int i_LengthToFill)
-        {
-            for (int i = 0; i < i_LengthToFill; i++)
-            {
-                i_ListToFill.Add(i);
-            }
-        }
-
-        public static Point ExtractMatrixCoordinates(int i_ListIndex, int i_NumOfRows, int i_NumOfCols)
-        {
-            int columnNum = i_ListIndex % i_NumOfCols;
-            int rowNum = i_ListIndex / i_NumOfCols;
-            return new Point(rowNum, columnNum);
-        }
-
-        public static int CalculateListIndex(Point i_MatrixCordinates, int i_NumOfRows, int i_NumOfCols)
-        {
-            return i_MatrixCordinates.X * i_NumOfCols + i_MatrixCordinates.Y;
-        }
-
     }
 }

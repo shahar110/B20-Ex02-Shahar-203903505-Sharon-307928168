@@ -33,16 +33,5 @@ namespace B20_Ex02_MemoryGame
             get { return m_Y; }
             set { m_Y = value; }
         }
-
-        public void Set(int i_DimentionX, int i_DimentionY)
-        {
-            m_X = i_DimentionX;
-            m_Y = i_DimentionY;
-        }
-
-        public string GetFormated()
-        {
-            return string.Format("{0},{1}", m_X, m_Y);
-        }
     }
 }

@@ -4,7 +4,6 @@ using System.Text;
 
 namespace B20_Ex02_MemoryGame
 {
-
     public class ConsoleUI
     {
         public void DrawLettersBoard(Board i_PlayingBoard)
@@ -15,31 +14,33 @@ namespace B20_Ex02_MemoryGame
             Console.Write("    ");
             for (int j = 0; j < i_PlayingBoard.BoardSize.Y; j++)
             {
-                Console.Write(String.Format("{0, -4}", (char)('A' + j)));
+                Console.Write(string.Format("{0, -4}", (char)('A' + j)));
             }
 
             Console.WriteLine();
             StringBuilder seperatorLine = new StringBuilder();
             seperatorLine.Append("  ");
-            seperatorLine.Append('=', i_PlayingBoard.BoardSize.Y * 4 + 1);
+            seperatorLine.Append('=', (i_PlayingBoard.BoardSize.Y * 4) + 1);
             Console.WriteLine(seperatorLine);
 
             for (int i = 0; i < i_PlayingBoard.BoardSize.X; i++)
             {
-                Console.Write(String.Format("{0} |", i + 1));
+                Console.Write(string.Format("{0} |", i + 1));
                 for (int j = 0; j < i_PlayingBoard.BoardSize.Y; j++)
                 {
                     if (i_PlayingBoard.Matrix[i, j].IsRevealed)
                     {
                         letterToPrint = (char)(i_PlayingBoard.Matrix[i, j].Value + 'A');
-                        Console.Write(String.Format(" {0} ", letterToPrint));
+                        Console.Write(string.Format(" {0} ", letterToPrint));
                     }
                     else
                     {
                         Console.Write("   ");
                     }
+
                     Console.Write("|");
                 }
+
                 Console.WriteLine();
                 Console.Write(seperatorLine);
                 Console.WriteLine();
@@ -89,17 +90,15 @@ namespace B20_Ex02_MemoryGame
                         break;
                 }
             }
-            while (!isSelectionValid);
-
+            while(!isSelectionValid);
         }
 
         public void GetPlayingMode(out Game.ePlayingMode o_PlayingMode)
         {
-            Console.WriteLine(String.Format(
+            Console.WriteLine(string.Format(
 @"Please select the desired playing mode:
 1. Multiplayer (Player VS Player)
-2. Single (VS PC)"
-            ));
+2. Single (VS PC)"));
 
             do
             {
@@ -162,7 +161,6 @@ Please enter the column Letter followed by the row number with no spaces in betw
             {
                 o_ToQuit = true;
             }
-
         }
 
         private int convertColumn(char i_ColumnLetter)
@@ -172,27 +170,26 @@ Please enter the column Letter followed by the row number with no spaces in betw
 
         private int convertRow(char i_Row)
         {
-            return (int)Char.GetNumericValue(i_Row) - 1;
+            return (int)char.GetNumericValue(i_Row) - 1;
         }
 
-        private bool isValidChoice(string i_userChoice)
+        private bool isValidChoice(string i_UserChoice)
         {
             bool isValidChoice = true;
 
-            if (i_userChoice.Length != 2)
+            if (i_UserChoice.Length != 2)
             {
                 isValidChoice = false;
             }
-
             else
             {
-                if (!(i_userChoice[0] >= 'A' && i_userChoice[0] <= 'Z'))
+                if (!(i_UserChoice[0] >= 'A' && i_UserChoice[0] <= 'Z'))
                 {
                     isValidChoice = false;
                 }
                 else
                 {
-                    if (!Char.IsNumber(i_userChoice[1]))
+                    if (!char.IsNumber(i_UserChoice[1]))
                     {
                         isValidChoice = false;
                     }
@@ -207,14 +204,14 @@ Please enter the column Letter followed by the row number with no spaces in betw
             Console.WriteLine("Would you like another round? Press 'y' for yes, press any other key to quit");
         }
 
-        public void PrintTileOutOfRange()
+        public void PrintSquareOutOfRange()
         {
-            Console.WriteLine("The tile you chose is out of board range. Please try again: ");
+            Console.WriteLine("The square you chose is out of board range. Please try again: ");
         }
 
-        public void PrintTileAlreadyRevealed()
+        public void PrintSquareAlreadyRevealed()
         {
-            Console.WriteLine("The tile you chose has already been revealed. Please try again: ");
+            Console.WriteLine("The square you chose has already been revealed. Please try again: ");
         }
 
         public void PrintGoodByeMessage()

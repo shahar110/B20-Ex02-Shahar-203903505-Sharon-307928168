@@ -8,10 +8,10 @@ namespace B20_Ex02_MemoryGame
     public class Player
     {
         private readonly string m_Name;
+        private readonly bool m_IsPc = false;
         private int m_CurrentScore = 0;
         private Point m_FirstRevealedSquare = null;
         private Point m_SecondRevealedSquare = null;
-        private readonly bool m_IsPc = false;
 
         public Player(string i_PlayerName, bool i_IsPc)
         {

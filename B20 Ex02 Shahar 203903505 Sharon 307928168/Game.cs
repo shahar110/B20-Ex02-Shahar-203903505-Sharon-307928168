@@ -10,9 +10,9 @@ namespace B20_Ex02_MemoryGame
         private readonly Player m_FirstPlayer = null;
         private readonly Player m_SecondPlayer = null;
         private Player m_CurrentPlayer = null;
-        List<int> m_PcAvailableSquaresList = null;
+        private List<int> m_PcAvailableSquaresList = null;
 
-        public enum eTileSelectionStatus
+        public enum eSquareSelectionStatus
         {
             Undefined,
             AwaitingSelection,
@@ -48,8 +48,12 @@ namespace B20_Ex02_MemoryGame
             PlayerVsPc,
         }
 
-        public Game(int i_BoardNumOfRows, int i_BoardNumOfCols, string i_FirstPlayerName, 
-                    string i_SecondPlayerName, ePlayingMode i_PlayingMode)
+        public Game(
+               int i_BoardNumOfRows,
+               int i_BoardNumOfCols,
+               string i_FirstPlayerName,                    
+               string i_SecondPlayerName,
+               ePlayingMode i_PlayingMode)
         {
             bool isPc = i_PlayingMode == ePlayingMode.PlayerVsPc ? true : false;
             m_PlayingBoard = new Board(i_BoardNumOfRows, i_BoardNumOfCols);
@@ -61,7 +65,6 @@ namespace B20_Ex02_MemoryGame
                 m_PcAvailableSquaresList = new List<int>();
                 Board.FillGridList(m_PcAvailableSquaresList, i_BoardNumOfRows * i_BoardNumOfCols);
             }
-
         }
 
         public Board PlayingBoard
@@ -84,7 +87,7 @@ namespace B20_Ex02_MemoryGame
             get { return m_CurrentPlayer; }
         }
 
-        public void PlayerMove(Point i_SelectedSquare, ePlayingMode i_PlayingMode, out eTileSelectionStatus o_SquareSelectionStatus)
+        public void PlayerMove(Point i_SelectedSquare, ePlayingMode i_PlayingMode, out eSquareSelectionStatus o_SquareSelectionStatus)
         {
             if (i_PlayingMode == ePlayingMode.PlayerVsPc && m_CurrentPlayer.IsPc == true)
             {
@@ -108,9 +111,9 @@ namespace B20_Ex02_MemoryGame
             }
         }
 
-        public void EvaluatePlayerMove(ePlayingMode i_PlayingMode, eTileSelectionStatus i_SquareSelectionStatus, out ePlayerMoveEvaluationStatus o_PlayerMoveEvaluationStatus, out eGameStatus o_GameStatus)
+        public void EvaluatePlayerMove(ePlayingMode i_PlayingMode, eSquareSelectionStatus i_SquareSelectionStatus, out ePlayerMoveEvaluationStatus o_PlayerMoveEvaluationStatus, out eGameStatus o_GameStatus)
         {
-            if (i_SquareSelectionStatus == eTileSelectionStatus.PlayerRevealedSecondSquare)
+            if (i_SquareSelectionStatus == eSquareSelectionStatus.PlayerRevealedSecondSquare)
             {
                 int firstSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.FirstRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
                 int secondSquareListValue = Board.CalculateListIndex(m_CurrentPlayer.SecondRevealedSquare, m_PlayingBoard.BoardSize.X, m_PlayingBoard.BoardSize.Y);
@@ -123,6 +126,7 @@ namespace B20_Ex02_MemoryGame
                         m_PcAvailableSquaresList.Remove(firstSquareListValue);
                         m_PcAvailableSquaresList.Remove(secondSquareListValue);
                     }
+
                     m_CurrentPlayer.ResetSquareSelection();
                     o_PlayerMoveEvaluationStatus = ePlayerMoveEvaluationStatus.SquaresMatch;
                 }
@@ -133,6 +137,7 @@ namespace B20_Ex02_MemoryGame
                         m_PcAvailableSquaresList.Add(firstSquareListValue);
                         m_PcAvailableSquaresList.Add(secondSquareListValue);
                     }
+
                     m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.FirstRevealedSquare);
                     m_PlayingBoard.UnRevealSquare(m_CurrentPlayer.SecondRevealedSquare);
                     m_CurrentPlayer.ResetSquareSelection();
@@ -171,18 +176,19 @@ namespace B20_Ex02_MemoryGame
             {
                 gameResult = eGameStatus.GameTie;
             }
+
             return gameResult;
         }
 
-        private void playerSquareSelection(Point i_SelectedSquare, out eTileSelectionStatus o_SquareSelectionStatus)
+        private void playerSquareSelection(Point i_SelectedSquare, out eSquareSelectionStatus o_SquareSelectionStatus)
         {
             if (!m_PlayingBoard.CheckIfSquareWithinRange(i_SelectedSquare))
             {
-                o_SquareSelectionStatus = eTileSelectionStatus.IllegalSquareSelection;
+                o_SquareSelectionStatus = eSquareSelectionStatus.IllegalSquareSelection;
             }
             else if (m_PlayingBoard.IsSquareRevealed(i_SelectedSquare))
             {
-                o_SquareSelectionStatus = eTileSelectionStatus.SquareAlreadyRevealed;
+                o_SquareSelectionStatus = eSquareSelectionStatus.SquareAlreadyRevealed;
             }
             else
             {
@@ -190,17 +196,17 @@ namespace B20_Ex02_MemoryGame
                 if (m_CurrentPlayer.FirstRevealedSquare == null)
                 {
                     m_CurrentPlayer.FirstRevealedSquare = i_SelectedSquare;
-                    o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedFirstSquare;
+                    o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedFirstSquare;
                 }
                 else
                 {
                     m_CurrentPlayer.SecondRevealedSquare = i_SelectedSquare;
-                    o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedSecondSquare;
+                    o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedSecondSquare;
                 }
             }
         }
 
-        private int pcSquareSelection(out eTileSelectionStatus o_SquareSelectionStatus)
+        private int pcSquareSelection(out eSquareSelectionStatus o_SquareSelectionStatus)
         {
             Random rand = new Random();
 
@@ -213,12 +219,12 @@ namespace B20_Ex02_MemoryGame
             if (m_CurrentPlayer.FirstRevealedSquare == null)
             {
                 m_CurrentPlayer.FirstRevealedSquare = pcSelectedSquare;
-                o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedFirstSquare;
+                o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedFirstSquare;
             }
             else
             {
                 m_CurrentPlayer.SecondRevealedSquare = pcSelectedSquare;
-                o_SquareSelectionStatus = eTileSelectionStatus.PlayerRevealedSecondSquare;
+                o_SquareSelectionStatus = eSquareSelectionStatus.PlayerRevealedSecondSquare;
             }
 
             return squareListIndexValue;

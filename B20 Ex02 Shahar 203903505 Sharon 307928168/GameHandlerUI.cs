@@ -5,19 +5,19 @@ namespace B20_Ex02_MemoryGame
 {
     public class GameHandlerUI
     {
-        private static void notifyMoveResult(Game.eTileSelectionStatus squareSelectionStatus, Point i_SelectedSquare, Game i_Game, ConsoleUI i_UI)
+        private static void notifyMoveResult(Game.eSquareSelectionStatus i_SquareSelectionStatus, Point i_SelectedSquare, Game i_Game, ConsoleUI i_UI)
         {
-            switch (squareSelectionStatus)
+            switch (i_SquareSelectionStatus)
             {
-                case Game.eTileSelectionStatus.IllegalSquareSelection:
-                    i_UI.PrintTileOutOfRange();
+                case Game.eSquareSelectionStatus.IllegalSquareSelection:
+                    i_UI.PrintSquareOutOfRange();
                     break;
 
-                case Game.eTileSelectionStatus.SquareAlreadyRevealed:
-                    i_UI.PrintTileAlreadyRevealed();
+                case Game.eSquareSelectionStatus.SquareAlreadyRevealed:
+                    i_UI.PrintSquareAlreadyRevealed();
                     break;
 
-                case Game.eTileSelectionStatus.PlayerRevealedFirstSquare:
+                case Game.eSquareSelectionStatus.PlayerRevealedFirstSquare:
                     if (i_Game.CurrentPlayer.IsPc == true)
                     {
                         System.Threading.Thread.Sleep(1000);
@@ -28,9 +28,10 @@ namespace B20_Ex02_MemoryGame
                     {
                         i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     }
+
                     break;
 
-                case Game.eTileSelectionStatus.PlayerRevealedSecondSquare:
+                case Game.eSquareSelectionStatus.PlayerRevealedSecondSquare:
                     i_UI.DrawLettersBoard(i_Game.PlayingBoard);
                     break;
 
@@ -39,9 +40,9 @@ namespace B20_Ex02_MemoryGame
             }
         }
 
-        private static void notifyEvaluationResult(Game.ePlayerMoveEvaluationStatus playerMoveEvaluationStatus, Point i_SelectedSquare, Game i_Game, ConsoleUI i_UI)
+        private static void notifyEvaluationResult(Game.ePlayerMoveEvaluationStatus i_PlayerMoveEvaluationStatus, Point i_SelectedSquare, Game i_Game, ConsoleUI i_UI)
         {
-            switch (playerMoveEvaluationStatus)
+            switch (i_PlayerMoveEvaluationStatus)
             {
                 case Game.ePlayerMoveEvaluationStatus.SquaresMatch:
                     i_UI.DrawLettersBoard(i_Game.PlayingBoard);
@@ -57,7 +58,7 @@ namespace B20_Ex02_MemoryGame
         public static void PlayGame(Game i_Game, Game.ePlayingMode i_PlayingMode, ConsoleUI i_UI)
         {
             Game.eGameStatus gameStatus = Game.eGameStatus.Undefined;
-            Game.eTileSelectionStatus squareSelectionStatus = Game.eTileSelectionStatus.Undefined;
+            Game.eSquareSelectionStatus squareSelectionStatus = Game.eSquareSelectionStatus.Undefined;
             Game.ePlayerMoveEvaluationStatus playerMoveEvaluationStatus = Game.ePlayerMoveEvaluationStatus.Undefined;
 
             i_UI.DrawLettersBoard(i_Game.PlayingBoard);
@@ -65,33 +66,33 @@ namespace B20_Ex02_MemoryGame
 
             do
             {
-                Point playerSelectedTile = new Point();
+                Point playerSelectedSquare = new Point();
 
                 if (i_Game.CurrentPlayer.IsPc == false)
                 {
-                    if (squareSelectionStatus != Game.eTileSelectionStatus.IllegalSquareSelection
-                   && squareSelectionStatus != Game.eTileSelectionStatus.SquareAlreadyRevealed)
+                    if (squareSelectionStatus != Game.eSquareSelectionStatus.IllegalSquareSelection
+                   && squareSelectionStatus != Game.eSquareSelectionStatus.SquareAlreadyRevealed)
                     {
                         Console.WriteLine(string.Format(
 @"It's now {0}'s turn.
 {1}'s score: {2}
-{3}'s score: {4}"
-    , i_Game.CurrentPlayer.Name
-    , i_Game.FirstPlayer.Name
-    , i_Game.FirstPlayer.Score
-    , i_Game.SecondPlayer.Name
-    , i_Game.SecondPlayer.Score));
+{3}'s score: {4}",
+    i_Game.CurrentPlayer.Name,
+    i_Game.FirstPlayer.Name,
+    i_Game.FirstPlayer.Score,
+    i_Game.SecondPlayer.Name,
+    i_Game.SecondPlayer.Score));
                     }
 
-                    i_UI.GetUserChoice(out playerSelectedTile, out toQuit);
+                    i_UI.GetUserChoice(out playerSelectedSquare, out toQuit);
                 }
 
                 if (!toQuit)
                 {
-                    i_Game.PlayerMove(playerSelectedTile, i_PlayingMode, out squareSelectionStatus);
-                    notifyMoveResult(squareSelectionStatus, playerSelectedTile, i_Game, i_UI);
+                    i_Game.PlayerMove(playerSelectedSquare, i_PlayingMode, out squareSelectionStatus);
+                    notifyMoveResult(squareSelectionStatus, playerSelectedSquare, i_Game, i_UI);
                     i_Game.EvaluatePlayerMove(i_PlayingMode, squareSelectionStatus, out playerMoveEvaluationStatus, out gameStatus);
-                    notifyEvaluationResult(playerMoveEvaluationStatus, playerSelectedTile, i_Game, i_UI);
+                    notifyEvaluationResult(playerMoveEvaluationStatus, playerSelectedSquare, i_Game, i_UI);
                 }
             }
             while (gameStatus == Game.eGameStatus.InProgress && !toQuit);
@@ -139,10 +140,11 @@ namespace B20_Ex02_MemoryGame
                 {
                     Ex02.ConsoleUtils.Screen.Clear();
                 }
-
-            } while (isAnotherRound);
+            }
+            while (isAnotherRound);
 
             UI.PrintGoodByeMessage();
+
         }
     }
 }
